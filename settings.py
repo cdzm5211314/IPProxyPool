@@ -16,4 +16,5 @@ LOG_MFT = '%(asctime)s %(filename)s [line:%(lineno)d] %(levelname)s: %(message)s
 LOG_DATEMFT = '%Y-%m-%d %H:%M:%S'  # 默认时间格式
 LOG_FILENAME = 'log.log'  # 默认日志文件名称
 
-
+# 测试代理IP超时时间
+TEST_TIMEOUT = 10
