@@ -18,3 +18,7 @@ LOG_FILENAME = 'log.log'  # 默认日志文件名称
 
 # 测试代理IP超时时间
 TEST_TIMEOUT = 10
+
+# 配置MongoDB数据库
+MONGO_URL = "mongodb://127.0.0.1:27017"
+
