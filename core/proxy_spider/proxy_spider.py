@@ -47,6 +47,7 @@ class KuaidailiSpider(BaseSpider):
     }
 
     # 当两个url地址页面访问时间间隔太短,就会报错,这是一种反爬手段
+    # 重写父类方法
     def get_page_from_url(self, url):
         # 随机等待1到3秒
         time.sleep(random.uniform(1,3))
@@ -74,6 +75,7 @@ class Ip3366Spider(BaseSpider):
     }
 
     # 当两个url地址页面访问时间间隔太短,就会报错,这是一种反爬手段
+    # 重写父类方法
     def get_page_from_url(self, url):
         # 随机等待1到3秒
         time.sleep(random.uniform(1,3))
@@ -82,19 +84,60 @@ class Ip3366Spider(BaseSpider):
 
 
 
+"""
+4. 实现66ip代理IP爬虫: http://www.66ip.cn/2.html
+    定义一个类继承通用爬虫类(BaseSpider)
+    提供urls, group_xpath, detail_xpath
+"""
+class Ip66Spider(BaseSpider):
+
+    # 准备URL列表
+    urls = ["http://www.66ip.cn/{}.html".format(i) for i in range(2, 6)]
+
+    # 分组xpath,获取包含代理IP信息标签列表的XPATH
+    group_xpath = '//*[@id="main"]/div/div[1]/table/tr[position()>1]'
+
+    # 组内xpath,获取代理IP详情信息的XPATH,格式: {"ip","xxx", "prot":"xxx"}
+    detail_xpath = {
+        "ip": "./td[1]/text()",
+        "port": "./td[2]/text()",
+    }
+
+    # 当两个url地址页面访问时间间隔太短,就会报错,这是一种反爬手段
+    # 重写父类方法
+    def get_page_from_url(self, url):
+        # 随机等待1到3秒
+        time.sleep(random.uniform(1,3))
+        # 调用父类的这个方法, 发送请求,获取响应数据
+        return super().get_page_from_url(url)
+
+
 if __name__ == '__main__':
 
     # 西刺爬虫
-    # spider = XiciSpider()
-    # print(spider.urls)
+    spider = XiciSpider()
+    print(spider.urls)
 
     # ip3366爬虫
-    spider = Ip3366Spider()
+    # spider = Ip3366Spider()
     # print(spider.urls)
 
     # 快代理
     # spider = KuaidailiSpider()
     # print(spider.urls)
 
-    for proxy in spider.get_proxies():
-        print(proxy)
+    # ip66
+    # spider = Ip66Spider()
+    # print(spider.urls)
+
+    # for proxy in spider.get_proxies():
+    #     print(proxy)
+
+    # 测试: 66ip
+    # url = 'http://www.66ip.cn/2.html'
+    # import requests
+    # res = requests.get(url)
+    # print(res.status_code)
+    # print(res.content.decode("gbk"))
+
+
