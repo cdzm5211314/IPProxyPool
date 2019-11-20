@@ -33,6 +33,7 @@ class BaseSpider(object):
     def get_page_from_url(self, url):
         """2.根据URL地址发送请求,获取页面数据"""
         res = requests.get(url, headers=get_request_headers())
+        print("爬取的网站url地址: %s, 请求状态码: %s" %(res.url, res.status_code))
         # return res.content.decode()  # 报错: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xd4 in position 110: invalid continuation byte
         return res.content  # 二进制数据
 
