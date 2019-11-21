@@ -30,3 +30,6 @@ PROXIES_SPIDERS = [
     "core.proxy_spider.proxy_spider.Ip66Spider",
     "core.proxy_spider.proxy_spider.Ip3366Spider",
 ]
+
+# 修改配置文件,增加爬虫运行时间间隔的配置,单位为小时
+RUN_SPIDRS_INTERVAL = 12
