@@ -33,3 +33,7 @@ PROXIES_SPIDERS = [
 
 # 修改配置文件,增加爬虫运行时间间隔的配置,单位为小时
 RUN_SPIDRS_INTERVAL = 12
+
+# 修改配置文件,指定检测代理IP的异步数量
+TEST_PROXIES_ASYNC_COUNT = 10
+
