@@ -86,12 +86,11 @@ class RunSpider(object):
         rs.run()
 
         # 4.3 使用schedule模块,每隔一定的时间,执行当前对象的run方法
-        # 修改配置文件,增加爬虫运行时间间隔的配置,单位为小时
-        schedule.every(RUN_SPIDRS_INTERVAL).hours.do(rs.run())
+        # 修改配置文件,配置爬虫运行的时间间隔,单位为小时
+        schedule.every(RUN_SPIDRS_INTERVAL).hours.do(rs.run)
         while True:
             schedule.run_pending()
             time.sleep(1)
-
 
 
 # 第二种方式: 使用异步
