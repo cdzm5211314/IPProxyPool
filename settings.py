@@ -22,3 +22,11 @@ TEST_TIMEOUT = 10
 # 配置MongoDB数据库
 MONGO_URL = "mongodb://127.0.0.1:27017"
 
+# 获取爬虫对象列表(即具体的爬虫类对象列表)
+PROXIES_SPIDERS = [
+    # 具体爬虫的全类名,路径: 模块.类名
+    "core.proxy_spider.proxy_spider.XiciSpider",
+    "core.proxy_spider.proxy_spider.KuaidailiSpider",
+    "core.proxy_spider.proxy_spider.Ip66Spider",
+    "core.proxy_spider.proxy_spider.Ip3366Spider",
+]
