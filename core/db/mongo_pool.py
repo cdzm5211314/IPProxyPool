@@ -69,6 +69,7 @@ class MongoPool(object):
             proxy = Proxy(**item)
             proxy_list.append(proxy)
 
+        # 返回满足要求的代理IP(Proxy对象)列表
         return proxy_list
 
     def get_proxies(self, protocol=None, domain=None, count=0):
@@ -95,10 +96,13 @@ class MongoPool(object):
         if domain:
             conditions["disable_domains"] = {"$nin": [domain]}
 
-        for proxy in self.proxies.find(conditions, limit=count):
+        # 返回满足要求的代理IP(Proxy对象)列表
+        for proxy in self.find(conditions, count=count):
             proxy_list.append(proxy)
-
         return proxy_list
+
+        # return self.find(conditions, limit=count)
+
 
     def random_proxy(self, protocol=None, domain=None, count=0):
         """

@@ -19,7 +19,7 @@ class Proxy(object):
         # self.area = area  # 代理IP所在地区
         self.score = score  # 代理IP的评分,用于衡量代理的可用性
         # # 默认分值可以通过配置文件进行设置,在进行代理IP可用性检查的时候,每遇到一次请求失败就减1分,减到0的时候就从池中删除
-        self.disable_domains = disable_domains  # 不可用域名列表,有些代理IP在某些域名下不可用,而在一些于明霞可用
+        self.disable_domains = disable_domains  # 不可用域名列表,有些代理IP在某些域名下不可用,而在一些域名下可用
 
     def __str__(self):
 

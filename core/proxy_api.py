@@ -1,12 +1,97 @@
 # -*- coding:utf-8 -*-
-# @Desc :
+# @Desc : 代理池的API模块
 # @Author : Administrator
 # @Date : 2019-11-18 10:25
 
+# 目的: 为爬虫提供高可用代理IP的服务接口
+
+from flask import Flask, request
+from core.db.mongo_pool import MongoPool
+from settings import PROXIES_MAX_COUNT
+import json
+
+# 1.在proxy_api.py中,创建ProxyApi类
+class ProxyApi(object):
+
+    def __init__(self):
+        """2.初始化方法"""
+        # 2.1初始一个Flask的web服务
+        self.app = Flask(__name__)
+        # 创建MongoPool对象,用于操作数据库
+        self.mongo_pool = MongoPool()
+
+        @self.app.route("/random")
+        def random():
+            """2.2实现根据协议类型和域名,提供随机的获取一个高可用代理IP服务"""
+            # 通过 protocol(当前请求的协议类型) 和 domain(当前请求的域名) 参数对代理IP进行过滤
+            protocol = request.args.get("protocol", None)
+            domain = request.args.get("domain", None)
+            print(protocol, domain)
+            # return "测试"
+
+            # 从mongodb数据库中随机获取一个代理IP
+            # PROXIES_MAX_COUNT: 指定获取代理IP的最大数量,这个值越小可用性越高,但随机性越差
+            proxy = self.mongo_pool.random_proxy(protocol, domain, count=PROXIES_MAX_COUNT)
+            print(type(proxy),proxy)
+
+            # protocol参数有值,根据http或https进行随机获取代理IP
+            # http://localhost:16888/random?protocol=http
+            if protocol: # 即 http, https
+                return "{}://{}:{}".format(protocol, proxy.ip, proxy.port)
+            else:
+                # protocol参数无值,进行随机获取代理IP
+                # http://localhost:16888/random
+                return "{}:{}".format(proxy.ip, proxy.port)
+
+        @self.app.route("/proxies")
+        def proxies():
+            """2.3实现根据协议类型和域名,提供获取多个高可用代理IP服务"""
+            # 通过 protocol 和 domain 参数对代理IP进行过滤,实现给指定的IP上追加不可用域名的服务
+            protocol = request.args.get("protocol", None)  # 获取协议: http/https
+            domain = request.args.get("domain", None)  # 获取域名: 如 jd.com
+            print(protocol, domain)
+
+            # 获取代理IP(Proxy对象)列表 ---> Proxy对象无法进行Json序列化
+            proxies = self.mongo_pool.get_proxies(protocol, domain, count=PROXIES_MAX_COUNT)
+            # 序列化: 把对象列表转换为字典列表进行Json序列化
+            proxies = [proxy.__dict__ for proxy in proxies]
+
+            # 返回Json格式字符串
+            return json.dumps(proxies)
+
+        @self.app.route("/disable_domain")
+        def disable_domain():
+            """2.4如果在获取IP的时候,有指定域名参数,将不在获取该IP,从而进一步提高代理IP的可用性"""
+            ip = request.args.get("ip", None)  # 获取协议: http/https
+            domain = request.args.get("domain", None)  # 获取域名: 如 jd.com
+
+            if ip is None:
+                return "请提供ip参数"
+
+            if domain is None:
+                return "请提供域名参数"
+
+            self.mongo_pool.disable_doamin(ip, domain)
+
+            return "{} 禁用域名 {} 成功!!!".format(ip, domain)
 
 
+    def run(self):
+        """3.实现run方法,英语启动flask的web服务"""
+        self.app.run(host="0.0.0.0", port=16888)
+
+    @classmethod
+    def start(cls):
+        """4.实现start的类方法,用于通过类名,启动服务"""
+        proxy_api = cls()
+        proxy_api.run()
 
 
+if __name__ == '__main__':
 
+    # 调用对象run方法启动
+    # proxy_api = ProxyApi()
+    # proxy_api.run()
 
-
+    # 调用类start方法启动
+    ProxyApi.start()

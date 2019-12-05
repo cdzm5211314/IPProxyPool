@@ -40,3 +40,5 @@ TEST_SPIDRS_INTERVAL = 12
 # 修改配置文件,指定检测代理IP的异步数量
 TEST_PROXIES_ASYNC_COUNT = 10
 
+# 修改配置文件,指定获取代理IP的最大数量,这个值越小可用性越高,但随机性越差
+PROXIES_MAX_COUNT = 10
